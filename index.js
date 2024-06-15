@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { Player, QueryType } = require('discord-player');
 
 dotenv.config();
@@ -25,14 +25,21 @@ const client = new Client({
     ]
 });
 
-client.on("ready", () => {
-    console.log("Bot is online!");
-    client.user.setActivity({
-        name: "🎶 | Music Time",
-        type: "LISTENING"
-    });
+client.on('ready', () => {
+    console.log('Bot is online!');
+    console.log(`Logged in as ${client.user.tag}`);
+    console.log('Setting activity status...');
+    client.user.setActivity('AudioWarrior Music!', { type: ActivityType.Listening });
 });
-client.on("error", console.error);
-client.on("warn", console.warn);
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'ping') {
+      await interaction.reply('Pong!');
+    }
+  });
+
+
 
 client.login(botToken);
